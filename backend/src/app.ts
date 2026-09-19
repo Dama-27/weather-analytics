@@ -1,5 +1,6 @@
 import express from 'express';
 import weatherRouter from './routes/weather.routes';
+import cacheRouter from './routes/cache.router';
 
 
 const app = express();
@@ -10,6 +11,7 @@ app.get("/health", (_request, response) => {
     });
 });
 
-app.use("/api", weatherRouter)
+app.use("/api", weatherRouter);
+app.use('/api', cacheRouter);
 
 export default app;
