@@ -4,13 +4,13 @@ import {
     calculateWindScore,
     calculateRainScore
 } from "../common/normalize";
-import { ComfortIndex } from "../types/comfort-index.type";
+import { WeatherData } from "../types/weather.types";
 
-export function calculateComfortIndex(weather: ComfortIndex): number {
-    const feelsLikeCeliciusScore = calculateFeelsLikeScore(weather.feelsLike - 273.15);
-    const humidityScore = calculateHumidityScore(weather.humidity);
-    const windSpeedScore = calculateWindScore(weather.windSpeed * 3.6);
-    const rainScore = calculateRainScore(weather.rain);
+export function calculateComfortIndex(weatherData: WeatherData): number {
+    const feelsLikeCeliciusScore = calculateFeelsLikeScore(weatherData.main.feels_like - 273.15);
+    const humidityScore = calculateHumidityScore(weatherData.main.humidity);
+    const windSpeedScore = calculateWindScore(weatherData.wind.speed * 3.6);
+    const rainScore = calculateRainScore(weatherData.rain?.["1h"]);
 
     const comfortScore = feelsLikeCeliciusScore * 0.5 + humidityScore * 0.3 + windSpeedScore * 0.1 + rainScore * 0.1;
     return comfortScore;

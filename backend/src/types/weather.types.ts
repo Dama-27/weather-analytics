@@ -1,5 +1,6 @@
 export interface WeatherData {
-    "id": number,
+    "cityCode": number,
+    "cityName": string,
     "weather": Array<{"description" :string}>,
     "main": {
         "temp": number,
@@ -11,11 +12,16 @@ export interface WeatherData {
     "wind": {
         "speed": number
     }
-    "name": string,
     "clouds": {
         "all": number
     },
     "rain"?: {
         "1h"?: number
     }
+}
+
+export interface WeatherDataResponse {
+    "comfortIndex": number,
+    "rank": number,
+    "weatherData": WeatherData,
 }

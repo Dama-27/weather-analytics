@@ -82,7 +82,11 @@ export function calculateWindScore(value: number): number {
     return 10;
 }
 
-export function calculateRainScore(value: number): number {
+export function calculateRainScore(value: number| undefined): number {
+  if(value == undefined || null)
+  {
+    return 100;
+  }
     if (value <= 0) {
       return 100;
     }
