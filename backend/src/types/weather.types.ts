@@ -11,7 +11,11 @@ export interface WeatherData {
     "wind": {
         "speed": number
     }
+    "name": string,
     "clouds": {
         "all": number
+    },
+    "rain"?: {
+        "1h"?: number
     }
 }
