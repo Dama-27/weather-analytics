@@ -41,3 +41,10 @@ export function getCacheStatistics() {
         TTL: DEFAULT_TTL_SECONDS
     }
 }
+
+export function clearCache(): void {
+  cache.flushAll();
+
+  statistics.hits = 0;
+  statistics.misses = 0;
+}

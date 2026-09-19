@@ -1,10 +1,21 @@
-import { getCityCodes } from "../services/city.service";
 import { calculateComfortIndex } from "../services/comfort-index.service";
-import { getWeatherByCityCode } from "../services/weather.service";
-import { Request, Response } from "express";
-import { WeatherData, WeatherDataResponse } from "../types/weather.types";
+import { WeatherData, RankedWeatherData } from "../types/weather.types";
+import { ANALYTICS_CACHE_KEY } from "../utils/cache-keys";
+import { getCached, setCached } from "./cache.service";
 
-export function createRankedWeatherResults(weatherData: WeatherData[]):WeatherDataResponse[] {
+const RANKED_WEATHER_CACHE_TTL_SECONDS = 300;
+
+export function createRankedWeatherResults(weatherData: WeatherData[]):RankedWeatherData[] {
+
+    const cached = getCached<RankedWeatherData[]>(ANALYTICS_CACHE_KEY)
+
+    if(cached){
+        console.log('[Cache] HIT processed analytics');
+        return cached;
+    }
+
+    console.log('[Cache] MISS processed analytics');
+
     const results = weatherData.map((key) => {
         const score = calculateComfortIndex(key);
         return {
@@ -20,6 +31,8 @@ export function createRankedWeatherResults(weatherData: WeatherData[]):WeatherDa
         comfortIndex: key.comfortIndex,
         weatherData: key.weatherData
     }));
+
+    setCached(ANALYTICS_CACHE_KEY, rankedResults, RANKED_WEATHER_CACHE_TTL_SECONDS);
 
     return rankedResults;
 }

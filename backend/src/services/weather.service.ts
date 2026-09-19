@@ -1,18 +1,20 @@
 import { WeatherData } from "../types/weather.types";
 import { env } from "../config/env";
 import { getCached, setCached } from "./cache.service";
+import { weatherCacheKey } from "../utils/cache-keys";
 
 const WEATHER_CACHE_TTL_SECONDS = 300;
 
 export async function getWeatherByCityCode(cityCode:string): Promise<WeatherData> {
-    const cachedWeather = getCached<WeatherData>(cityCode)
+    const cacheKey = weatherCacheKey(cityCode)
+    const cachedWeather = getCached<WeatherData>(cacheKey)
 
     if(cachedWeather){
-        console.log(`[Cache] HIT ${cityCode}`);
+        console.log(`[Cache] HIT ${cacheKey}`);
         return cachedWeather;
     }
 
-    console.log(`[Cache] MISS ${cityCode}`);
+    console.log(`[Cache] MISS ${cacheKey}`);
     const url = new URL("https://api.openweathermap.org/data/2.5/weather");
 
     url.searchParams.set('id', cityCode)
@@ -28,7 +30,7 @@ export async function getWeatherByCityCode(cityCode:string): Promise<WeatherData
 
     const weather = (await response.json()) as WeatherData;
     
-    setCached(cityCode, weather, WEATHER_CACHE_TTL_SECONDS);
+    setCached(cacheKey, weather, WEATHER_CACHE_TTL_SECONDS);
 
     return weather;
 }

@@ -20,7 +20,7 @@ export interface WeatherData {
     }
 }
 
-export interface WeatherDataResponse {
+export interface RankedWeatherData {
     "comfortIndex": number,
     "rank": number,
     "weatherData": WeatherData,
