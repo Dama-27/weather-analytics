@@ -20,15 +20,10 @@ function createMockWeather(value: {
     main: {
       temp: feelsLikeCelsius + 273.15,
       feels_like: feelsLikeCelsius + 273.15,
-      pressure: 1013,
       humidity,
     },
-    visibility: 10000,
     wind: {
       speed: windSpeedMs,
-    },
-    clouds: {
-      all: 0,
     },
     rain: rainMm > 0 ? { '1h': rainMm } : undefined,
   };
