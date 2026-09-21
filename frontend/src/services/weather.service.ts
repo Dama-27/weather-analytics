@@ -74,8 +74,13 @@ function normalizeWeatherItem(item: RankedWeatherData, index: number): WeatherRe
   };
 }
 
-export async function getWeatherData(): Promise<WeatherResult[]> {
-  const response = await fetch(`${API_URL}/weather`);
+export async function getWeatherData(accessToken?: string): Promise<WeatherResult[]> {
+  const headers: Record<string, string> = {};
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  }
+
+  const response = await fetch(`${API_URL}/weather`, { headers });
 
   if (!response.ok) {
     throw new Error('Failed to fetch weather data');

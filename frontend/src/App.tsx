@@ -1,24 +1,32 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import { getWeatherData } from './services/weather.service';
 import type { WeatherResult } from './types/weather';
 import WeatherTable from './components/WeatherTable';
 import WeatherCard from './components/WeatherCard';
 import Loading from './components/Loading';
+import UserHeader from './components/UserHeader';
+import AuthButtons from './components/AuthButtons';
 
 function App() {
+  const { isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
   const [weather, setWeather] = useState<WeatherResult[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'rank' | 'comfortScore' | 'temperature' | 'city'>('rank');
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      return;
+    }
+
     async function loadWeather() {
       try {
         setLoading(true);
         setError(null);
 
-        const data = await getWeatherData();
-
+        const accessToken = await getAccessTokenSilently();
+        const data = await getWeatherData(accessToken);
         setWeather(data);
       } catch {
         setError('Unable to load weather data.');
@@ -28,7 +36,7 @@ function App() {
     }
 
     loadWeather();
-  }, []);
+  }, [isAuthenticated, getAccessTokenSilently]);
 
   const sortedWeather = useMemo(() => {
     const data = [...weather];
@@ -55,43 +63,46 @@ function App() {
     }
   }, [weather, sortBy]);
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <main>
+      <main className="login-container">
         <h1>Weather Analytics</h1>
-        <Loading />
+        <p>Checking authentication...</p>
       </main>
     );
   }
 
-  if (error) {
+  if (!isAuthenticated) {
     return (
-      <main>
+      <main className="login-container">
         <h1>Weather Analytics</h1>
-        <p>{error}</p>
+        <p>Please log in to access the weather comfort dashboard.</p>
+        <div className="login-card">
+          <AuthButtons />
+        </div>
       </main>
     );
   }
 
   return (
     <main>
-      <h1>Weather Analytics</h1>
-      <p>Weather comfort analysis dashboard</p>
+      <UserHeader />
 
-      {weather.length === 0 ? (
+      {loading ? (
+        <Loading />
+      ) : error ? (
+        <p className="error-message">{error}</p>
+      ) : weather.length === 0 ? (
         <p>No weather data available.</p>
       ) : (
         <>
           <div className="controls">
-            <label htmlFor="sort">
-              Sort by:
-            </label>
-
+            <label htmlFor="sort">Sort by:</label>
             <select
               id="sort"
               value={sortBy}
               onChange={(event) =>
-                setSortBy(event.target.value as | 'rank' | 'comfortScore' | 'temperature' | 'city')
+                setSortBy(event.target.value as 'rank' | 'comfortScore' | 'temperature' | 'city')
               }
             >
               <option value="rank">Rank</option>
