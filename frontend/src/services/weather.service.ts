@@ -3,8 +3,10 @@ import type { WeatherResult } from '../types/weather';
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 export interface WeatherData {
-  cityCode: number;
-  cityName: string;
+  id?: number;
+  name?: string;
+  cityCode?: number;
+  cityName?: string;
   weather: Array<{ description: string }>;
   main: {
     temp: number;
@@ -37,7 +39,7 @@ function toCelsius(kelvinOrCelsius: number | undefined | null): number | null {
 function normalizeWeatherItem(item: RankedWeatherData, index: number): WeatherResult {
   const wd = item.weatherData;
 
-  const city = wd?.cityName || (wd as unknown as { name?: string })?.name || 'N/A';
+  const city = wd?.name || wd?.cityName || 'N/A';
   const description = wd?.weather?.[0]?.description || 'N/A';
 
   const temperature = toCelsius(wd?.main?.temp);

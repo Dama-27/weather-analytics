@@ -14,6 +14,8 @@ function createMockWeather(value: {
   const rainMm = value?.rainMm ?? 0;                       
 
   return {
+    id: 1248991,
+    name: 'Colombo',
     cityCode: 1248991,
     cityName: 'Colombo',
     weather: [{ description: 'clear sky' }],
@@ -100,5 +102,6 @@ describe('calculateComfortIndex', () => {
     const score = calculateComfortIndex(extremeWeather);
     expect(score).toBeGreaterThanOrEqual(0);
     expect(score).toBeLessThanOrEqual(100);
+    expect(Number.isInteger(score)).toBe(true);
   });
 });

@@ -67,7 +67,7 @@ function App() {
     return (
       <main className="login-container">
         <h1>Weather Analytics</h1>
-        <p>Checking authentication...</p>
+        <Loading />
       </main>
     );
   }

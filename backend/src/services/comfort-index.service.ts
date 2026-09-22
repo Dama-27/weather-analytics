@@ -13,5 +13,5 @@ export function calculateComfortIndex(weatherData: WeatherData): number {
     const rainScore = calculateRainScore(weatherData.rain?.["1h"] ?? 0);
 
     const comfortScore = feelsLikeCeliciusScore * 0.5 + humidityScore * 0.3 + windSpeedScore * 0.1 + rainScore * 0.1;
-    return comfortScore;
+    return Math.round(Math.max(0, Math.min(100, comfortScore)));
 }

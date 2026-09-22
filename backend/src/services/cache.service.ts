@@ -26,20 +26,17 @@ export function setCached<T>(key: string, value: T, ttlSeconds: number = DEFAULT
     cache.set(key, value, ttlSeconds);
 }
 
-export function deleteCached<T>(key: number): void {
+export function deleteCached(key: string): void {
     cache.del(key);
-}
-
-export function getCacheStatus() {
-    return cache.getStats();
 }
 
 export function getCacheStatistics() {
     return {
         ...statistics,
         totalRequests: statistics.hits + statistics.misses,
-        TTL: DEFAULT_TTL_SECONDS
-    }
+        TTL: DEFAULT_TTL_SECONDS,
+        keys: cache.keys(),
+    };
 }
 
 export function clearCache(): void {

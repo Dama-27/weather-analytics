@@ -1,5 +1,4 @@
 import { getCityCodes } from "../services/city.service";
-import { calculateComfortIndex } from "../services/comfort-index.service";
 import { createRankedWeatherResults } from "../services/weather-analytics.service";
 import { getWeatherByCityCode } from "../services/weather.service";
 import { Request, Response } from "express";
