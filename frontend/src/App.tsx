@@ -9,7 +9,7 @@ import UserHeader from './components/UserHeader';
 import AuthButtons from './components/AuthButtons';
 
 function App() {
-  const { isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated, isLoading, error: authError, getAccessTokenSilently } = useAuth0();
   const [weather, setWeather] = useState<WeatherResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -76,7 +76,7 @@ function App() {
     return (
       <main className="login-container">
         <h1>Weather Analytics</h1>
-        <p>Please log in to access the weather comfort dashboard.</p>
+        {!authError && <p>Please log in to access the weather comfort dashboard.</p>}
         <div className="login-card">
           <AuthButtons />
         </div>
